@@ -1,9 +1,13 @@
 import cv2
 import mediapipe as mp
+import sys
 
 mp_face_mesh = mp.solutions.face_mesh
 
-img_path = input("Enter image path: ")
+if len(sys.argv) > 1:
+    img_path = sys.argv[1]
+else:
+    img_path = input("Enter image path: ")
 
 image = cv2.imread(img_path)
 if image is None:

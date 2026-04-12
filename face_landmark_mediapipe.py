@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 import time
 import os
+import sys
 
 mp_face = mp.solutions.face_mesh
 mp_draw = mp.solutions.drawing_utils
@@ -26,20 +27,26 @@ def detect_landmarks(face_mesh, image):
             count += 1
     return image, count
 
-print("✅ Mediapipe Face Landmark System Started")
-print("1. Detect from Image")
-print("2. Detect from Webcam")
-mode = input("Enter 1 or 2: ").strip()
+if len(sys.argv) > 1:
+    mode = sys.argv[1]
+else:
+    print("[SUCCESS] Mediapipe Face Landmark System Started")
+    print("1. Detect from Image")
+    print("2. Detect from Webcam")
+    mode = input("Enter 1 or 2: ").strip()
 
 if mode == "1":
-    path = input("Enter image path: ")
+    if len(sys.argv) > 2:
+        path = sys.argv[2]
+    else:
+        path = input("Enter image path: ")
     if not os.path.exists(path):
-        print("❌ Image not found!")
+        print("[ERROR] Image not found!")
         exit()
     image = cv2.imread(path)
     with mp_face.FaceMesh(static_image_mode=True, max_num_faces=3) as face_mesh:
         result, count = detect_landmarks(face_mesh, image)
-    print(f"✅ Faces detected: {count}")
+    print(f"[SUCCESS] Faces detected: {count}")
     os.makedirs("results", exist_ok=True)
     cv2.imwrite("results/output_image.jpg", result)
     cv2.imshow("Landmark Result", result)
@@ -50,7 +57,7 @@ elif mode == "2":
     cap = cv2.VideoCapture(0)
     prev = 0
     with mp_face.FaceMesh(max_num_faces=3, refine_landmarks=True, min_detection_confidence=0.5, min_tracking_confidence=0.5) as face_mesh:
-        print("🎥 Webcam ON — Press Q to quit")
+        print("[WEBCAM] Webcam ON - Press Q to quit")
         while True:
             ret, frame = cap.read()
             if not ret:
@@ -67,4 +74,4 @@ elif mode == "2":
     cap.release()
     cv2.destroyAllWindows()
 else:
-    print("❌ Invalid choice.")
+    print("[ERROR] Invalid choice.")

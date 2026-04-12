@@ -10,6 +10,12 @@ __pycache__/
 Lib/
 Scripts/
 
+# Datasets and large weights
+dataset/
+results/
+*.dat
+*.h5
+
 # OS junk
 .DS_Store
 Thumbs.db

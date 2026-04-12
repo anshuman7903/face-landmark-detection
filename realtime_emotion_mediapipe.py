@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model
 # Load model
 model = load_model("my_emotion_model.h5")
 
-emotions = ["happy", "sad", "angry", "surprise", "neutral", "disgust"]
+emotions = ["angry", "disgust", "happy", "neutral", "sad", "surprise"]
 
 # Load Mediapipe
 mp_face = mp.solutions.face_mesh
@@ -30,8 +30,8 @@ while True:
             # Bounding box
             xs = [int(pt.x * w) for pt in lm.landmark]
             ys = [int(pt.y * h) for pt in lm.landmark]
-            x1, x2 = min(xs), max(xs)
-            y1, y2 = min(ys), max(ys)
+            x1, x2 = max(0, min(xs)), min(w, max(xs))
+            y1, y2 = max(0, min(ys)), min(h, max(ys))
 
             face = frame[y1:y2, x1:x2]
 

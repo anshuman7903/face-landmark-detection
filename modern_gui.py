@@ -1,5 +1,7 @@
 import customtkinter as ctk
 import os
+import sys
+import subprocess
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -31,11 +33,22 @@ def start_landmark():
     )
     lbl.pack(pady=20)
 
+    def run_webcam():
+        subprocess.Popen([sys.executable, "face_landmark_mediapipe.py", "2"])
+
+    def run_image():
+        file_path = ctk.filedialog.askopenfilename(
+            title="Select an image",
+            filetypes=[("Image files", "*.jpg *.jpeg *.png")]
+        )
+        if file_path:
+            subprocess.Popen([sys.executable, "face_landmark_image.py", file_path])
+
     webcam_btn = ctk.CTkButton(
         popup,
         text="Use Webcam",
         width=200,
-        command=lambda: os.system("python face_landmark_mediapipe.py")
+        command=run_webcam
     )
     webcam_btn.pack(pady=15)
 
@@ -43,17 +56,17 @@ def start_landmark():
         popup,
         text="Use Image",
         width=200,
-        command=lambda: os.system("python face_landmark_image.py")
+        command=run_image
     )
     image_btn.pack(pady=15)
 
 # Emotion Detection
 def start_emotion():
-    os.system("python realtime_emotion_mediapipe.py")
+    subprocess.Popen([sys.executable, "realtime_emotion_mediapipe.py"])
 
 # Train Model
 def train_model():
-    os.system("python train_emotion_model.py")
+    subprocess.Popen([sys.executable, "train_emotion_model.py"])
 
 # Exit
 def exit_app():
